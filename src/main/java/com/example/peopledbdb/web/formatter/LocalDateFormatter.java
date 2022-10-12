@@ -12,7 +12,7 @@ import java.util.Locale;
 public class LocalDateFormatter implements Formatter<LocalDate> {
 
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
     @Override
     public LocalDate parse(String text, Locale locale) throws ParseException {
