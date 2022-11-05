@@ -1,6 +1,7 @@
 package com.example.peopledbdb.web.controller;
 
 import com.example.peopledbdb.biz.model.Person;
+import com.example.peopledbdb.biz.service.PersonService;
 import com.example.peopledbdb.data.FileStorageRepository;
 import com.example.peopledbdb.data.PersonRepository;
 import com.example.peopledbdb.exception.StorageException;
@@ -31,14 +32,17 @@ public class PeopleController {
     private PersonRepository personRepository;
     private FileStorageRepository fileStorageRepository;
 
+    private PersonService personService;
+
     private final String DISPO = """
                 attachment; filename="%s
                             
             """;
 
-    public PeopleController(PersonRepository personRepository, FileStorageRepository fileStorageRepository) {
+    public PeopleController(PersonRepository personRepository, FileStorageRepository fileStorageRepository, PersonService personService) {
         this.personRepository = personRepository;
         this.fileStorageRepository = fileStorageRepository;
+        this.personService = personService;
     }
 
     @ModelAttribute("people")
@@ -72,8 +76,7 @@ public class PeopleController {
         log.info("Errors: " + errors);
         if (!errors.hasErrors()) {
             try {
-                fileStorageRepository.save(photoFile.getOriginalFilename(), photoFile.getInputStream());
-                personRepository.save(person);
+                personService.save(person, photoFile.getInputStream());
                 return "redirect:people";
             } catch (StorageException e) {
                 model.addAttribute("errorMsg", "System is currently not able to accept photo files at this time. ");
